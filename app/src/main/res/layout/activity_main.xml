@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/Camera_view"
+        android:layout_width="360dp"
+        android:layout_height="480dp"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="string/desc_IV_camera_view"
+        />
+
+    <Button
+        android:id="@+id/Btn_upload"
+        android:layout_width="140dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/Btn_take_pict"
+        android:text="upload"
+        android:backgroundTint="@color/merah"
+        />
+
+    <Button
+        android:id="@+id/Btn_take_pict"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="18dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/Camera_view"
+        android:backgroundTint="@color/merah"
+        android:drawableBottom="@drawable/vector_camera_white_icon"
+        />
+
+</RelativeLayout>
