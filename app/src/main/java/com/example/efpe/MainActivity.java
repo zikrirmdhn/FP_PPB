@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent data = result.getData();
             if (data != null) {
-                //controller.saveImageFile(data);
+                controller.saveImageFile(data);
             }
         }
     }
