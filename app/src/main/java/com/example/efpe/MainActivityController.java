@@ -14,10 +14,12 @@ import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -25,20 +27,20 @@ public class MainActivityController {
     private final Context context;
     private final MainActivityCallback callback;
 
-    public MainActivityController(Context context, MainActivity callback) {
+    public MainActivityController(Context context, MainActivityCallback callback) {
         this.context = context;
         this.callback = callback;
     }
 
     @SuppressLint("Recycle")
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    public void saveImageFile(Intent intent) throws Exception {
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public void saveImageFile(Intent intent) {
         try {
             if (intent == null) {
                 throw new Exception("Error passing image file!");
             }
 
-            Bitmap imageBitmap = intent.getParcelableExtra("data", Bitmap.class);
+            Bitmap imageBitmap = intent.getParcelableExtra("data");
             if (imageBitmap == null) {
                 throw new Exception("Error passing image file!");
             }
@@ -54,18 +56,14 @@ public class MainActivityController {
 
             ContentValues contentValues = new ContentValues();
             Date date = new Date();
-            CharSequence dateNow = DateFormat.format("MM-dd-yyyy hh-mm-ss", date.getTime());
+            String dateNow = DateFormat.format("MM-dd-yyyy hh-mm-ss", date.getTime()).toString();
             contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, dateNow + ".png");
             contentValues.put(MediaStore.Images.Media.MIME_TYPE, "images/");
 
             Uri imageUri = contentResolver.insert(dirUri, contentValues);
 
             try {
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                outputStream.flush();
-                outputStream.close();
-
+                Objects.requireNonNull(contentResolver.openOutputStream(imageUri)).write(imageBitmap.getRowBytes());
                 Toast.makeText(context, "Image saved to the gallery", Toast.LENGTH_SHORT).show();
             } catch (Exception ex) {
                 Toast.makeText(context, "Failed to save image", Toast.LENGTH_SHORT).show();
@@ -81,7 +79,11 @@ public class MainActivityController {
             callback.showUploadButton();
 
         } catch (Exception ex) {
-            throw ex;
+            try {
+                throw ex;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -91,7 +93,7 @@ public class MainActivityController {
         return byteStream.toByteArray();
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void uploadImage(String requestUrl, byte[] imageByteArray) {
         try {
             Executor executor = Executors.newSingleThreadExecutor();
@@ -118,4 +120,3 @@ public class MainActivityController {
         }
     }
 }
-
