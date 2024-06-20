@@ -27,18 +27,18 @@ public class RecipePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.recipe_page);
 
-        ArrayList<> listIngredients = new ArrayList<>();
+//        ArrayList<> listIngredients = new ArrayList<>();
 
-        lv_ingredient = (ListView) findViewById(R.id.list_ingredient);
-        //ini masih pake adapter dari tugas listview
-        kontakAdapter kAdapter = new kontakAdapter(this,0,listKontak);
-        lv_ingredient.setAdapter(kAdapter);
-
-        lv_step = (ListView) findViewById(R.id.list_step);
-        kontakAdapter2 kAdapter2 = new kontakAdapter2(this,0,listKontak);
-        lv_step.setAdapter(kAdapter2);
+//        lv_ingredient = (ListView) findViewById(R.id.list_ingredient);
+//        //ini masih pake adapter dari tugas listview
+//        kontakAdapter kAdapter = new kontakAdapter(this,0,listKontak);
+//        lv_ingredient.setAdapter(kAdapter);
+//
+//        lv_step = (ListView) findViewById(R.id.list_step);
+//        kontakAdapter2 kAdapter2 = new kontakAdapter2(this,0,listKontak);
+//        lv_step.setAdapter(kAdapter2);
 
 
 

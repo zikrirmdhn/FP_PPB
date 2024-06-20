@@ -5,6 +5,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -98,17 +101,23 @@ public class MainActivityController {
         try {
             Executor executor = Executors.newSingleThreadExecutor();
             Handler uiHandler = new Handler(Looper.getMainLooper());
-            String uploadImageApi = requestUrl + "/api/upload-photo";
+            String uploadImageApi = requestUrl + "/upload-photo";
 
             Toast.makeText(context, "Uploading image...", Toast.LENGTH_SHORT).show();
 
             executor.execute(() -> {
                 HttpHandler httpHandler = new HttpHandler();
-                boolean result = httpHandler.uploadImage(uploadImageApi, imageByteArray);
+                JSONObject result = httpHandler.uploadImage(uploadImageApi, imageByteArray);
 
                 uiHandler.post(() -> {
-                    if (result) {
+                    if (result != null) {
                         Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show();
+
+                        // Start the new activity and pass the response data
+                        Intent intent = new Intent(context, RecipeActivity.class);
+                        intent.putExtra("response_json", result.toString());
+                        context.startActivity(intent);
+
                     } else {
                         Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show();
                     }
