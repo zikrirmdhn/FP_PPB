@@ -109,15 +109,30 @@ public class MainActivityController {
                 HttpHandler httpHandler = new HttpHandler();
                 JSONObject result = httpHandler.uploadImage(uploadImageApi, imageByteArray);
 
+                // Declare score variable outside the try-catch block
+                String score;
+                float score_float;
+                try {
+                    score = result.getString("score");
+                    score_float = Float.parseFloat(score);
+                } catch (JSONException e) {
+                    uiHandler.post(() -> Toast.makeText(context, "Failed to parse score", Toast.LENGTH_SHORT).show());
+                    return;
+                }
+
+                float finalScoreFloat = score_float;
                 uiHandler.post(() -> {
                     if (result != null) {
-                        Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show();
+                        if (finalScoreFloat > 0.7) {
+                            Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show();
 
-                        // Start the new activity and pass the response data
-                        Intent intent = new Intent(context, RecipeActivity.class);
-                        intent.putExtra("response_json", result.toString());
-                        context.startActivity(intent);
-
+                            // Start the new activity and pass the response data
+                            Intent intent = new Intent(context, RecipeActivity.class);
+                            intent.putExtra("response_json", result.toString());
+                            context.startActivity(intent);
+                        } else {
+                            Toast.makeText(context, "Detection confidence not enough, please retake photo", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show();
                     }
