@@ -30,9 +30,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private MainActivityController controller;
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
 
     private ImageView cameraView;
     private Button takePictureButton;
+    private Button galleryButton;
     private Button uploadButton;
 
     @Override
@@ -42,12 +44,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         controller = new MainActivityController(this, this);
         cameraActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::handleCameraResult);
+        galleryActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::handleGalleryResult);
 
         cameraView = findViewById(R.id.Camera_view);
         takePictureButton = findViewById(R.id.Btn_take_pict);
+        galleryButton = findViewById(R.id.Btn_gallery);
         uploadButton = findViewById(R.id.Btn_upload);
 
         takePictureButton.setOnClickListener(this);
+        galleryButton.setOnClickListener(this);
         uploadButton.setOnClickListener(this);
     }
 
@@ -57,9 +62,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             takePicture();
         } else if (v.getId() == R.id.Btn_upload) {
             uploadImage();
+        } else {
+            gallery();
         }
     }
 
+    public void gallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryActivityResultLauncher.launch(galleryIntent);
+    }
 
     private void takePicture() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -81,12 +92,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     private void handleCameraResult(@NonNull ActivityResult result) {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent data = result.getData();
             if (data != null) {
                 controller.saveImageFile(data);
+            }
+        }
+    }
+
+    private void handleGalleryResult(@NonNull ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            if (data != null) {
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    updateImageView(bitmap);
+                    showUploadButton();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
