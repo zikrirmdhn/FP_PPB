@@ -27,14 +27,40 @@
         />
 
     <Button
-        android:id="@+id/Btn_take_pict"
+        android:id="@+id/Btn_history"
         android:layout_width="60dp"
         android:layout_height="70dp"
         android:layout_marginTop="18dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/Camera_view"
+        android:layout_toLeftOf="@id/Btn_take_pict"
+        android:backgroundTint="@color/merah"
+        android:drawableBottom="@drawable/history"
+        />
+
+    <Button
+        android:id="@+id/Btn_take_pict"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/Camera_view"
+        android:layout_centerHorizontal="true"
         android:backgroundTint="@color/merah"
         android:drawableBottom="@drawable/vector_camera_white_icon"
+        />
+
+    <Button
+        android:id="@+id/Btn_gallery"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="18dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/Camera_view"
+        android:layout_toRightOf="@id/Btn_take_pict"
+        android:backgroundTint="@color/merah"
+        android:drawableBottom="@drawable/image_gallery"
         />
 
 </RelativeLayout>
